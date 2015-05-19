@@ -12,26 +12,20 @@ OPENSSL_VERSION="1.0.1g"
 
 DEVELOPER="/Applications/Xcode.app/Contents/Developer"
 
-SDK_VERSION="7.1"
 MIN_VERSION="4.3"
 
 IPHONEOS_PLATFORM="${DEVELOPER}/Platforms/iPhoneOS.platform"
-IPHONEOS_SDK="${IPHONEOS_PLATFORM}/Developer/SDKs/iPhoneOS${SDK_VERSION}.sdk"
+IPHONEOS_SDK="${IPHONEOS_PLATFORM}/Developer/SDKs/iPhoneOS.sdk"
 IPHONEOS_GCC="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
 
 IPHONESIMULATOR_PLATFORM="${DEVELOPER}/Platforms/iPhoneSimulator.platform"
-IPHONESIMULATOR_SDK="${IPHONESIMULATOR_PLATFORM}/Developer/SDKs/iPhoneSimulator${SDK_VERSION}.sdk"
+IPHONESIMULATOR_SDK="${IPHONESIMULATOR_PLATFORM}/Developer/SDKs/iPhoneSimulator.sdk"
 IPHONESIMULATOR_GCC="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
 
 # Make sure things actually exist
 
 if [ ! -d "$IPHONEOS_PLATFORM" ]; then
   echo "Cannot find $IPHONEOS_PLATFORM"
-  exit 1
-fi
-
-if [ ! -d "$IPHONEOS_SDK" ]; then
-  echo "Cannot find $IPHONEOS_SDK"
   exit 1
 fi
 
@@ -42,11 +36,6 @@ fi
 
 if [ ! -d "$IPHONESIMULATOR_PLATFORM" ]; then
   echo "Cannot find $IPHONESIMULATOR_PLATFORM"
-  exit 1
-fi
-
-if [ ! -d "$IPHONESIMULATOR_SDK" ]; then
-  echo "Cannot find $IPHONESIMULATOR_SDK"
   exit 1
 fi
 
@@ -77,7 +66,7 @@ build()
    perl -i -pe "s|^CC= gcc|CC= ${GCC} -arch ${ARCH} -miphoneos-version-min=${MIN_VERSION}|g" Makefile
    perl -i -pe "s|^CFLAG= (.*)|CFLAG= -isysroot ${SDK} \$1|g" Makefile
    make &> "/tmp/openssl-${OPENSSL_VERSION}-${ARCH}.build-log"
-   make install &> "/tmp/openssl-${OPENSSL_VERSION}-${ARCH}.install-log"
+   make install_sw &> "/tmp/openssl-${OPENSSL_VERSION}-${ARCH}.install-log"
    popd
    rm -rf "openssl-${OPENSSL_VERSION}"
 }
